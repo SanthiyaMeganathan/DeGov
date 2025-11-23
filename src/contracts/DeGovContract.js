@@ -603,7 +603,7 @@ export const DEGOV_CONTRACT_ABI = [
 ];
 
 // Your deployed contract address from environment variables
-export const DEGOV_CONTRACT_ADDRESS = config.CONTRACT_ADDRESS;
+
 
 // Network configuration from environment variables
 export const ARBITRUM_NETWORK_CONFIG = {
@@ -960,5 +960,3 @@ contract DeGov {
     }
 }
 */
-
-export { CONTRACT_ADDRESS, CONTRACT_ABI };
