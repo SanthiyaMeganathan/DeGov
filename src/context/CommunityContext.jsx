@@ -70,14 +70,29 @@ export const CommunityProvider = ({ children }) => {
           const community = await contract.getCommunity(i);
           const memberCount = await contract.getCommunityMemberCount(i);
           
+          // Parse metadata from metadataURI
+          let description = 'No description available';
+          let category = 'general';
+          
+          try {
+            if (community.metadataURI) {
+              const metadata = JSON.parse(community.metadataURI);
+              description = metadata.description || description;
+              category = metadata.category || category;
+            }
+          } catch (metadataError) {
+            // If metadata is not JSON, treat metadataURI as description
+            description = community.metadataURI || description;
+          }
+          
           communitiesData.push({
             id: i,
             name: community.name,
-            description: community.description,
+            description: description,
             creator: community.creator,
             members: memberCount.toNumber(),
             proposals: [], // Will load separately
-            category: community.category || 'general',
+            category: category,
             isJoined: false, // Will check separately
             image: getRandomEmoji()
           });
@@ -150,10 +165,20 @@ export const CommunityProvider = ({ children }) => {
       
       const contractWithSigner = contract.connect(signer);
       
+      // Create metadata object for the community
+      const metadata = {
+        description: communityData.description,
+        category: communityData.category || 'general',
+        createdAt: new Date().toISOString()
+      };
+      
+      // For now, we'll use the description as metadataURI
+      // In production, you'd upload metadata to IPFS and use the IPFS hash
+      const metadataURI = JSON.stringify(metadata);
+      
       const tx = await contractWithSigner.createCommunity(
         communityData.name,
-        communityData.description,
-        communityData.category || 'general'
+        metadataURI
       );
       
       console.log('⏳ Transaction submitted:', tx.hash);
