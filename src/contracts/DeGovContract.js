@@ -1,8 +1,10 @@
 // Smart Contract Integration for DeGov Platform
 // CommunityDAO contract deployed on blockchain
 
-// Contract address
-export const CONTRACT_ADDRESS = "0x8b582a90B92e689D53c249d3cB55AD878571E490";
+import config from '../config/env.js';
+
+// Contract address from environment variables
+export const CONTRACT_ADDRESS = config.CONTRACT_ADDRESS;
 
 // Your deployed contract ABI
 export const DEGOV_CONTRACT_ABI = [
@@ -600,20 +602,20 @@ export const DEGOV_CONTRACT_ABI = [
   }
 ];
 
-// Your deployed contract address on Arbitrum
-export const DEGOV_CONTRACT_ADDRESS = "0x8b582a90B92e689D53c249d3cB55AD878571E490";
+// Your deployed contract address from environment variables
+export const DEGOV_CONTRACT_ADDRESS = config.CONTRACT_ADDRESS;
 
-// Arbitrum network configuration
+// Network configuration from environment variables
 export const ARBITRUM_NETWORK_CONFIG = {
-  chainId: '0xa4b1', // 42161 in hex
-  chainName: 'Arbitrum One',
+  chainId: config.CHAIN_ID_HEX,
+  chainName: config.NETWORK_NAME,
   nativeCurrency: {
     name: 'Ethereum',
     symbol: 'ETH',
     decimals: 18,
   },
-  rpcUrls: ['https://arb1.arbitrum.io/rpc'],
-  blockExplorerUrls: ['https://arbiscan.io/'],
+  rpcUrls: [config.RPC_URL],
+  blockExplorerUrls: [config.BLOCK_EXPLORER_URL],
 };
 
 // Contract interaction functions

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ethers } from 'ethers';
+import config from '../config/env.js';
 
 const WalletContext = createContext();
 
@@ -18,8 +19,8 @@ export const WalletProvider = ({ children }) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [chainId, setChainId] = useState(null);
 
-  // Arbitrum One chain ID
-  const ARBITRUM_CHAIN_ID = '0xa4b1'; // 42161 in hex
+  // Chain ID from environment variables  
+  const ARBITRUM_CHAIN_ID = config.CHAIN_ID_HEX;
 
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -106,14 +107,14 @@ export const WalletProvider = ({ children }) => {
             params: [
               {
                 chainId: ARBITRUM_CHAIN_ID,
-                chainName: 'Arbitrum One',
+                chainName: config.NETWORK_NAME,
                 nativeCurrency: {
                   name: 'Ethereum',
                   symbol: 'ETH',
                   decimals: 18,
                 },
-                rpcUrls: ['https://arb1.arbitrum.io/rpc'],
-                blockExplorerUrls: ['https://arbiscan.io/'],
+                rpcUrls: [config.RPC_URL],
+                blockExplorerUrls: [config.BLOCK_EXPLORER_URL],
               },
             ],
           });

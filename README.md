@@ -24,7 +24,6 @@ A decentralized governance platform built for the Arbitrum hackathon, enabling c
 - **Blockchain**: Arbitrum Sepolia Testnet (Layer 2 Ethereum)
 - **Smart Contract Language**: Solidity ^0.8.0
 - **Smart Contract Development**: Hardhat framework
-- **Contract Deployment**: Remix IDE with injected MetaMask
 - **Wallet Integration**: MetaMask via ethers.js v5.7.2
 - **Routing**: React Router DOM
 - **State Management**: React Context API
@@ -105,7 +104,6 @@ This project demonstrates a **clean separation** between frontend and smart cont
 ### Blockchain Development
 - **Solidity**: Smart contract programming language (^0.8.0)
 - **Hardhat**: Smart contract development framework
-- **Remix IDE**: Web-based IDE for contract deployment
 - **MetaMask**: Injected provider for wallet connection
 - **ethers.js**: Ethereum library for blockchain interactions
 - **Arbitrum Sepolia**: Layer 2 testnet for development and testing
@@ -331,13 +329,26 @@ The built files will be in the `dist/` directory and can be deployed to:
 - **IPFS**
 - Any static hosting service
 
-### Environment Variables (Optional)
-Create a `.env` file for configuration:
+### Environment Configuration
+
+For security, sensitive information is stored in environment variables. Create a `.env` file in the project root:
+
+```bash
+# Copy from .env.example
+cp .env.example .env
 ```
-VITE_CONTRACT_ADDRESS=0x8b582a90B92e689D53c249d3cB55AD878571E490
-VITE_NETWORK_RPC=https://sepolia-rollup.arbitrum.io/rpc
+
+Then update the `.env` file with your actual values:
+```
+VITE_CONTRACT_ADDRESS=your_deployed_contract_address
 VITE_CHAIN_ID=421614
+VITE_CHAIN_ID_HEX=0x66eee
+VITE_NETWORK_NAME=Arbitrum Sepolia
+VITE_RPC_URL=https://sepolia-rollup.arbitrum.io/rpc
+VITE_BLOCK_EXPLORER_URL=https://sepolia.arbiscan.io/
 ```
+
+⚠️ **Never commit your `.env` file to version control!**
 
 ## 🤝 Contributing
 
