@@ -1,5 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useWallet } from './WalletContext';
+import { 
+  saveGlobalData, 
+  loadGlobalData, 
+  saveUserData, 
+  loadUserData, 
+  getDefaultUserData 
+} from '../utils/storage.js';
 
 const CommunityContext = createContext();
 
@@ -16,9 +23,46 @@ export const CommunityProvider = ({ children }) => {
   const [communities, setCommunities] = useState([]);
   const [userProposals, setUserProposals] = useState([]);
   const [userVotes, setUserVotes] = useState([]);
+  const [currentUserData, setCurrentUserData] = useState(getDefaultUserData());
 
-  // Initialize mock data
+  // Load global communities data on app start
   useEffect(() => {
+    const savedCommunities = loadGlobalData();
+    if (savedCommunities && savedCommunities.length > 0) {
+      setCommunities(savedCommunities);
+    } else {
+      // Initialize with default mock communities if no saved data
+      initializeDefaultCommunities();
+    }
+  }, []);
+
+  // Load user-specific data when wallet connects/changes
+  useEffect(() => {
+    if (isConnected && account) {
+      loadUserSpecificData(account);
+    } else {
+      // Reset user data when disconnected
+      setCurrentUserData(getDefaultUserData());
+      setUserProposals([]);
+      setUserVotes([]);
+    }
+  }, [isConnected, account]);
+
+  // Save global data whenever communities change
+  useEffect(() => {
+    if (communities.length > 0) {
+      saveGlobalData(communities);
+    }
+  }, [communities]);
+
+  // Save user-specific data whenever it changes
+  useEffect(() => {
+    if (isConnected && account) {
+      saveUserData(account, currentUserData);
+    }
+  }, [currentUserData, isConnected, account]);
+
+  const initializeDefaultCommunities = () => {
     const mockCommunities = [
       {
         id: 1,
@@ -63,12 +107,35 @@ export const CommunityProvider = ({ children }) => {
     ];
 
     setCommunities(mockCommunities);
+  };
 
-    // Initialize empty user votes - no default votes
-    if (isConnected && account) {
-      setUserVotes([]);
+  // Load user-specific data from localStorage
+  const loadUserSpecificData = (walletAddress) => {
+    const userData = loadUserData(walletAddress);
+    if (userData) {
+      setCurrentUserData(userData);
+      updateUserStatesFromData(userData);
+    } else {
+      // First time user - initialize with defaults
+      const defaultData = getDefaultUserData();
+      setCurrentUserData(defaultData);
+      updateUserStatesFromData(defaultData);
     }
-  }, [isConnected, account]);
+  };
+
+  // Update user states based on loaded data
+  const updateUserStatesFromData = (userData) => {
+    // Update communities with user's join status
+    setCommunities(prev => prev.map(community => ({
+      ...community,
+      isJoined: userData.joinedCommunities.includes(community.id)
+    })));
+
+    // Set user votes
+    setUserVotes(userData.votes || []);
+    
+    // Note: userProposals will be updated automatically via getUserProposals function
+  };
 
   const joinCommunity = (communityId) => {
     if (!isConnected) {
@@ -87,6 +154,19 @@ export const CommunityProvider = ({ children }) => {
           : community
       )
     );
+
+    // Update user data
+    setCurrentUserData(prev => {
+      const isCurrentlyJoined = prev.joinedCommunities.includes(communityId);
+      const newJoinedCommunities = isCurrentlyJoined
+        ? prev.joinedCommunities.filter(id => id !== communityId)
+        : [...prev.joinedCommunities, communityId];
+      
+      return {
+        ...prev,
+        joinedCommunities: newJoinedCommunities
+      };
+    });
   };
 
   const createCommunity = (newCommunity) => {
@@ -95,8 +175,9 @@ export const CommunityProvider = ({ children }) => {
       return false;
     }
 
+    // Generate a unique ID using timestamp to avoid conflicts
     const community = {
-      id: communities.length + 1,
+      id: Date.now(),
       name: newCommunity.name,
       description: newCommunity.description,
       members: 1,
@@ -107,6 +188,14 @@ export const CommunityProvider = ({ children }) => {
     };
 
     setCommunities(prev => [...prev, community]);
+
+    // Update user data - add to created communities and joined communities
+    setCurrentUserData(prev => ({
+      ...prev,
+      createdCommunities: [...prev.createdCommunities, community.id],
+      joinedCommunities: [...prev.joinedCommunities, community.id]
+    }));
+
     return true;
   };
 
@@ -148,6 +237,12 @@ export const CommunityProvider = ({ children }) => {
           : community
       )
     );
+
+    // Update user data - add to created proposals
+    setCurrentUserData(prev => ({
+      ...prev,
+      createdProposals: [...prev.createdProposals, newProposal.id]
+    }));
 
     return true;
   };
@@ -225,6 +320,12 @@ export const CommunityProvider = ({ children }) => {
     };
     
     setUserVotes(prev => [...prev, newVote]);
+
+    // Update user data - add to votes
+    setCurrentUserData(prev => ({
+      ...prev,
+      votes: [...prev.votes, newVote]
+    }));
 
     return true;
   };
