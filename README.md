@@ -13,6 +13,8 @@ A decentralized governance platform built for the Arbitrum hackathon, enabling c
 - **Create Communities**: Start new communities with custom names and descriptions
 - **Create Proposals**: Submit proposals within communities you're part of
 - **Vote on Proposals**: Cast votes on active proposals
+- **Persistent User Data**: All your actions are saved and persist across sessions
+- **Wallet-Specific Storage**: Each MetaMask account maintains separate data
 - **My Community**: Manage communities you've joined and track their activity
 - **My Proposals**: Monitor all proposals you've created across communities
 - **My Votes**: Review your complete voting history and track outcomes
@@ -27,6 +29,8 @@ A decentralized governance platform built for the Arbitrum hackathon, enabling c
 - **Wallet Integration**: MetaMask via ethers.js v5.7.2
 - **Routing**: React Router DOM
 - **State Management**: React Context API
+- **Data Persistence**: localStorage with wallet-specific namespacing
+- **Storage Utilities**: Custom storage.js for cross-session data persistence
 
 ## 📱 Project Structure
 
@@ -46,6 +50,8 @@ src/                    # 🎨 Frontend React application
 ├── context/            # React context for state management
 │   ├── WalletContext.jsx # Wallet connection and blockchain state
 │   └── CommunityContext.jsx # Community and proposal data management
+├── utils/              # Utility functions
+│   └── storage.js      # Wallet-specific localStorage persistence
 ├── contracts/          # Smart contract integration (Frontend ABI)
 │   └── DeGovContract.js # Contract ABI and interaction functions
 └── styles/             # CSS modules and component styles
