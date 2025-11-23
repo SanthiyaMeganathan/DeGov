@@ -21,7 +21,8 @@ A decentralized governance platform built for the Arbitrum hackathon, enabling c
 
 - **Frontend**: React 18 + Vite
 - **Styling**: Vanilla CSS with modern responsive design
-- **Blockchain**: Arbitrum (Layer 2 Ethereum)
+- **Blockchain**: Arbitrum Sepolia Testnet (Layer 2 Ethereum)
+- **Smart Contract Language**: Solidity ^0.8.0
 - **Smart Contract Development**: Hardhat framework
 - **Contract Deployment**: Remix IDE with injected MetaMask
 - **Wallet Integration**: MetaMask via ethers.js v5.7.2
@@ -31,7 +32,9 @@ A decentralized governance platform built for the Arbitrum hackathon, enabling c
 ## 📱 Project Structure
 
 ```
-src/
+contracts/              # 📋 Smart contract source code (REFERENCE ONLY)
+│   └── CommunityDAO.sol   # Solidity smart contract code used for deployment
+src/                    # 🎨 Frontend React application
 ├── components/          # Reusable UI components
 │   ├── Header.jsx      # Navigation header with wallet connection
 │   └── WalletButton.jsx # Wallet connect/disconnect button
@@ -44,10 +47,52 @@ src/
 ├── context/            # React context for state management
 │   ├── WalletContext.jsx # Wallet connection and blockchain state
 │   └── CommunityContext.jsx # Community and proposal data management
-├── contracts/          # Smart contract integration
+├── contracts/          # Smart contract integration (Frontend ABI)
 │   └── DeGovContract.js # Contract ABI and interaction functions
 └── styles/             # CSS modules and component styles
 ```
+
+### 📝 Important Note: Smart Contract Architecture
+
+**The `contracts/` folder contains the Solidity source code for REFERENCE ONLY.**
+
+- ⚠️ **Not used by the frontend**: The React app does not compile or interact with the `.sol` file
+- 📁 **Separate development**: Smart contract was developed in a separate Hardhat project
+- 🚀 **Independent deployment**: Contract was compiled and deployed separately on Arbitrum Sepolia testnet
+- 🔗 **Frontend integration**: The frontend connects to the deployed contract via ABI in `src/contracts/DeGovContract.js`
+
+**To use the smart contract:**
+1. Copy `contracts/CommunityDAO.sol` to your separate Hardhat/Truffle project
+2. Compile and deploy using your preferred development environment
+3. Update the contract address in the frontend configuration
+
+## 🏗️ Architecture Overview
+
+### 🗂️ Separation of Concerns
+
+This project demonstrates a **clean separation** between frontend and smart contract development:
+
+```
+💻 Frontend Repository (This Repo)
+├── React application code
+├── UI components and pages  
+├── Wallet integration
+└── Contract ABI for blockchain interaction
+
+📁 Smart Contract Project (Separate)
+├── Hardhat development environment
+├── Solidity contract source
+├── Testing and deployment scripts
+└── Network configuration
+```
+
+**Why Separate?**
+- 🛡️ **Security**: Keeps contract development isolated
+- 🏭 **Team Collaboration**: Frontend and contract teams can work independently  
+- 🚀 **Deployment Flexibility**: Deploy contracts and frontend separately
+- 📚 **Code Organization**: Cleaner repository structure
+
+**The `contracts/` folder in this repo contains reference code only!**
 
 ## 🔧 Development Tools Used
 
@@ -58,15 +103,17 @@ src/
 - **CSS3**: Modern responsive design with Grid and Flexbox
 
 ### Blockchain Development
+- **Solidity**: Smart contract programming language (^0.8.0)
 - **Hardhat**: Smart contract development framework
 - **Remix IDE**: Web-based IDE for contract deployment
 - **MetaMask**: Injected provider for wallet connection
 - **ethers.js**: Ethereum library for blockchain interactions
-- **Arbitrum**: Layer 2 scaling solution for lower gas costs
+- **Arbitrum Sepolia**: Layer 2 testnet for development and testing
 
 ### Testing & Deployment
 - **Browser Testing**: Manual testing with MetaMask integration
-- **Network Testing**: Arbitrum testnet and mainnet validation
+- **Network Testing**: Arbitrum Sepolia testnet validation
+- **Smart Contract Testing**: Developed and tested using Solidity
 - **Static Deployment**: Ready for Vercel, Netlify, or similar platforms
 
 ## 🛠️ Getting Started
@@ -94,19 +141,50 @@ npm run dev
 
 ### Smart Contract Integration
 
-**Development Process:**
-1. Smart contracts were developed using **Hardhat** framework
-2. Contracts compiled and tested in Hardhat environment
-3. Deployed to **Arbitrum network** using **Remix IDE** with **injected MetaMask**
+**⚠️ Important: Frontend and Smart Contract are Developed Separately**
+
+This repository contains:
+1. **Frontend React App** (in `src/` folder) - The main application
+2. **Smart Contract Source** (in `contracts/` folder) - **Reference only**, not used by frontend
+
+**Smart Contract Development Process:**
+1. Smart contract written in **Solidity** (see `contracts/CommunityDAO.sol`)
+2. Developed in a **separate Hardhat project** (not in this repository)
+3. Compiled and tested using Hardhat framework
+4. Deployed to **Arbitrum Sepolia testnet** using **Remix IDE**
+5. Frontend connects to deployed contract via ABI
+
+**To Deploy Your Own Contract:**
+1. Copy `contracts/CommunityDAO.sol` to your Hardhat project
+2. Compile: `npx hardhat compile`
+3. Deploy using Remix IDE or Hardhat scripts
+4. Update contract address in `src/contracts/DeGovContract.js`
 
 To connect your own deployed contract:
 
-1. **Deploy your contract** using Remix IDE:
+**To Deploy Your Own Smart Contract:**
+
+1. **Setup separate Hardhat project**:
+   ```bash
+   mkdir my-degov-contracts
+   cd my-degov-contracts
+   npx hardhat init
+   ```
+
+2. **Copy contract code**:
+   - Copy `contracts/CommunityDAO.sol` from this repo to your Hardhat `contracts/` folder
+
+3. **Deploy using Remix IDE**:
    - Open [Remix IDE](https://remix.ethereum.org)
+   - Upload your `CommunityDAO.sol` file
    - Connect MetaMask with **"Injected Provider - MetaMask"**
-   - Ensure MetaMask is connected to **Arbitrum network**
-   - Deploy your CommunityDAO contract
+   - Ensure MetaMask is connected to **Arbitrum Sepolia testnet**
+   - Compile and deploy your CommunityDAO contract
    - Copy the deployed contract address
+
+4. **Update frontend configuration**:
+   - Open `src/contracts/DeGovContract.js` in this project
+   - Replace the contract address with your deployed address
 
 2. **Update contract configuration** in `src/contracts/DeGovContract.js`:
    ```javascript
@@ -182,7 +260,8 @@ To connect your own deployed contract:
 
 **Deployed Contract Information:**
 - **Contract Address**: `0x8b582a90B92e689D53c249d3cB55AD878571E490`
-- **Network**: Arbitrum One (Chain ID: 42161)
+- **Network**: Arbitrum Sepolia Testnet (Chain ID: 421614)
+- **Contract Language**: Solidity ^0.8.0
 - **Contract Name**: CommunityDAO
 - **Deployment Tool**: Remix IDE with MetaMask injection
 - **Development Framework**: Hardhat
@@ -196,27 +275,28 @@ To connect your own deployed contract:
 
 ## 🌐 Network Configuration
 
-The platform is configured for **Arbitrum One** network:
-- Chain ID: 42161 (0xa4b1)
-- RPC URL: https://arb1.arbitrum.io/rpc
-- Block Explorer: https://arbiscan.io/
+The platform is configured for **Arbitrum Sepolia Testnet**:
+- Chain ID: 421614 (0x66eee)
+- RPC URL: https://sepolia-rollup.arbitrum.io/rpc
+- Block Explorer: https://sepolia.arbiscan.io/
+- Faucet: Available through Arbitrum faucet for testnet ETH
 
 ## 🛠️ Development Workflow
 
 ### Smart Contract Development Process
 
-1. **Contract Development**:
-   - Smart contracts developed using **Hardhat** framework
-   - Local testing and compilation with Hardhat
-   - Solidity version: ^0.8.0
+1. **Smart Contract Development** (Separate Project):
+   - Smart contracts written in **Solidity** (^0.8.20) - see `contracts/CommunityDAO.sol`
+   - Developed using **Hardhat** framework in a separate project folder
+   - Compiled and tested locally with Hardhat
+   - Deployed to **Arbitrum Sepolia testnet** using Remix IDE
+   - **Important**: The `.sol` file in this repo is for reference only
 
-2. **Deployment Process**:
-   - Open [Remix IDE](https://remix.ethereum.org)
-   - Import compiled contracts from Hardhat
-   - Connect using **"Injected Provider - MetaMask"**
-   - Ensure MetaMask connected to **Arbitrum network**
-   - Deploy CommunityDAO contract
-   - Verify deployment on [Arbiscan](https://arbiscan.io/)
+2. **Frontend Development** (This Repository):
+   - React application in `src/` folder
+   - Connects to deployed contract via ABI in `src/contracts/DeGovContract.js`
+   - Uses ethers.js for blockchain interactions
+   - Mock data for development when blockchain not available
 
 3. **Frontend Integration**:
    - Update contract address in `src/contracts/DeGovContract.js`
@@ -255,7 +335,8 @@ The built files will be in the `dist/` directory and can be deployed to:
 Create a `.env` file for configuration:
 ```
 VITE_CONTRACT_ADDRESS=0x8b582a90B92e689D53c249d3cB55AD878571E490
-VITE_NETWORK_RPC=https://arb1.arbitrum.io/rpc
+VITE_NETWORK_RPC=https://sepolia-rollup.arbitrum.io/rpc
+VITE_CHAIN_ID=421614
 ```
 
 ## 🤝 Contributing
@@ -273,8 +354,9 @@ MIT License - feel free to use this code for your own projects.
 ## 🔗 Links
 
 - **Live Demo**: [Your deployment URL]
-- **Smart Contract**: [Arbitrum block explorer link]
+- **Smart Contract**: [Arbitrum Sepolia testnet explorer link]
 - **Arbitrum Docs**: https://docs.arbitrum.io/
+- **Testnet Faucet**: https://bridge.arbitrum.io/
 
 ## 🎊 Hackathon Submission
 

@@ -33,3 +33,6 @@ dist-ssr
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Note: contracts/ folder contains reference Solidity code only
+# It is not compiled or used by the frontend React application
